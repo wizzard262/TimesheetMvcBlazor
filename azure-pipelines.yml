@@ -35,9 +35,9 @@ steps:
     configuration: '$(buildConfiguration)'
 
 # deploy to azure 
-- task: AzureWebApp@1
+- task: azureRmWebAppDeployment@4
   inputs:
     appType: 'webApp'
     azureSubscription: 'CmapTimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
-    appName: 'cmapTimesheet'
+    WebAppName: 'cmapTimesheet'
     package: '$(build.artifactStagingDirectory)/WebApp.zip'
