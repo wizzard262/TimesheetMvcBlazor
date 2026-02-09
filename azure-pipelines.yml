@@ -33,3 +33,12 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# deploy to azure 
+#- task: AzureWebApp@1
+  #inputs:
+    #ppType: 'webApp'
+    #azureSubscription: 'Azure subscription 1'
+    #appName: 'cmapTimesheet'
+    #package: '$(build.artifactStagingDirectory)/WebApp.zip'
+
