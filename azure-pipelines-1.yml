@@ -21,7 +21,8 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-# Do not use VSBuild to build the whole solution
+# Do not use VSBuild to build the whole solution 
+# (Note: VSBuild built /WebApp.zip but now DotNetCoreCLI builds  /publish folder)
 # - task: VSBuild@1
 #   inputs:
 #     solution: '$(solution)'
@@ -46,5 +47,6 @@ steps:
   inputs:
     appType: 'webApp'
     azureSubscription: 'TimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
-    WebAppName: 'cmapTimesheet'
-    package: '$(build.artifactStagingDirectory)/WebApp.zip'
+    WebAppName: 'TimesheetMvcRazorComponents'
+    package: '$(build.artifactStagingDirectory)/publish'
+    #package: '$(build.artifactStagingDirectory)/WebApp.zip'  <-- this would be the correct output for VSBuild
