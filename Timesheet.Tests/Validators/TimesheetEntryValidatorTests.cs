@@ -1,9 +1,9 @@
 using Moq;
 using System.ComponentModel.DataAnnotations;
-using Timesheet.Models.Domain;
-using Timesheet.Models.Dto;
-using Timesheet.Repositories;
-using Timesheet.Validation;
+using Timesheet.Core.Models.Domain;
+using Timesheet.Core.Models.Dto;
+using Timesheet.Core.Repositories;
+using Timesheet.Core.Validation;
 
 namespace Timesheet.Tests.Validators;
 

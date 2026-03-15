@@ -1,8 +1,8 @@
 using Moq;
-using Timesheet.Models.Domain;
-using Timesheet.Models.Dto;
-using Timesheet.Repositories;
-using Timesheet.Services;
+using Timesheet.Core.Models.Domain;
+using Timesheet.Core.Models.Dto;
+using Timesheet.Core.Repositories;
+using Timesheet.Core.Services;
 
 namespace Timesheet.Tests.Services
 {

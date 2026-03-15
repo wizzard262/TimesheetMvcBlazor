@@ -1,6 +1,6 @@
 using FluentAssertions;
-using Timesheet.Models.Domain;
-using Timesheet.Repositories;
+using Timesheet.Core.Models.Domain;
+using Timesheet.Core.Repositories;
 using Timesheet.Tests.TestData;
 
 namespace Timesheet.Tests.Repositories

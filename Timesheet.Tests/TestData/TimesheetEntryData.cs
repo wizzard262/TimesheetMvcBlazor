@@ -1,5 +1,5 @@
-﻿using Timesheet.Models.Domain;
-using Timesheet.Models.Dto;
+﻿using Timesheet.Core.Models.Domain;
+using Timesheet.Core.Models.Dto;
 
 namespace Timesheet.Tests.TestData;
 

@@ -1,4 +1,4 @@
-﻿using Timesheet.Validation;
+﻿using Timesheet.Core.Validation;
 
 namespace Timesheet.Tests.Validators;
 
