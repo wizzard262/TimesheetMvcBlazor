@@ -38,6 +38,6 @@ steps:
 - task: azureRmWebAppDeployment@4
   inputs:
     appType: 'webApp'
-    azureSubscription: 'CmapTimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
+    azureSubscription: 'TimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
     WebAppName: 'cmapTimesheet'
     package: '$(build.artifactStagingDirectory)/WebApp.zip'
