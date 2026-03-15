@@ -53,13 +53,13 @@ steps:
 # # Delete any files
 # - task: DeleteFiles@1
 #   inputs:
-#     SourceFolder: '$(Build.ArtifactStagingDirectory)/publish'
+#     SourceFolder: '$(Build.ArtifactStagingDirectory)/publish/'
 #     Contents: '*.zip'
 
 # zip ONLY the published output
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish/Timesheet.Mvc.Classic'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/site.zip'
