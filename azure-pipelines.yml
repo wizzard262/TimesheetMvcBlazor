@@ -38,6 +38,13 @@ steps:
 # build just the Mvc.Classic project
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'build'
+    projects: 'Timesheet.Mvc.Classic/Timesheet.Mvc.Classic.csproj'
+    arguments: '--configuration Release'
+
+# publish just the Mvc.Classic project
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'publish'
     projects: 'Timesheet.Mvc.Classic/Timesheet.Mvc.Classic.csproj'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
