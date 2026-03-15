@@ -30,6 +30,11 @@ steps:
 #     platform: '$(buildPlatform)'
 #     configuration: '$(buildConfiguration)'
 
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+
 # build just the Mvc.Classic project
 - task: DotNetCoreCLI@2
   inputs:
