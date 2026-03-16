@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Timesheet.Mvc.Classic\Timesheet.Mvc.Classic.csproj" />
+    <ProjectReference Include="..\Timesheet.Core\Timesheet.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

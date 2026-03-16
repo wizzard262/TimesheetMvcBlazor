@@ -23,7 +23,6 @@ if (!webApplication.Environment.IsDevelopment())
 webApplication.UseHttpsRedirection();
 webApplication.UseStaticFiles();
 webApplication.UseRouting();
-webApplication.UseAuthorization();
 
 webApplication.MapControllerRoute(
     name: "default",
