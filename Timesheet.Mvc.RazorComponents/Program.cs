@@ -1,37 +1,38 @@
-using Timesheet.Core.Repositories;
+﻿using Timesheet.Core.Repositories;
 using Timesheet.Core.Services;
 using Timesheet.Core.Validation;
 using Timesheet.Mvc.RazorComponents.Components;
 
-var builder = WebApplication.CreateBuilder(args);
+var webApplicationBuilder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ITimesheetRepository, TimesheetRepository>();
-builder.Services.AddScoped<ITimesheetService, TimesheetService>();
-builder.Services.AddScoped<ITimesheetReportingService, TimesheetReportingService>();
-builder.Services.AddScoped<ITimesheetEntryValidator, TimesheetEntryValidator>();
-builder.Services.AddRazorComponents().AddInteractiveServerComponents(); // Add Razor Components support
+webApplicationBuilder.Services.AddControllersWithViews();
+webApplicationBuilder.Services.AddSingleton<ITimesheetRepository, TimesheetRepository>();
+webApplicationBuilder.Services.AddScoped<ITimesheetService, TimesheetService>();
+webApplicationBuilder.Services.AddScoped<ITimesheetReportingService, TimesheetReportingService>();
+webApplicationBuilder.Services.AddScoped<ITimesheetEntryValidator, TimesheetEntryValidator>();
+webApplicationBuilder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
-var app = builder.Build();
+
+
+var webApplication = webApplicationBuilder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (!webApplication.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    webApplication.UseExceptionHandler("/Home/Error");
+    webApplication.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
+webApplication.UseHttpsRedirection();
+webApplication.UseStaticFiles();
+webApplication.UseRouting();
+webApplication.UseAntiforgery();        // ⭐ REQUIRED for Razor Components
+webApplication.MapBlazorHub();          // ⭐ REQUIRED for Razor Components
+webApplication.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.MapControllerRoute(
+webApplication.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+webApplication.Run();

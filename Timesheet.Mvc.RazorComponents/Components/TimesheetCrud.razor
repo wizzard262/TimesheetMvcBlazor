@@ -1,3 +1,91 @@
-﻿<div style="border: solid 1px red">
-    <h1>Timesheet CRUD Razor Component</h1>
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Timesheet.Core.Models.Dto
+@using Timesheet.Core.Services
+@inject ITimesheetService TimesheetService
+@inject Microsoft.Extensions.Logging.ILogger<TimesheetCrud> Logger
+
+<div style="border: solid 1px red">
+    Timesheet CRUD Razor Component (.razor)
+
+    <EditForm EditContext="editContext">
+        <div>
+            <label>User ID</label>
+            <InputNumber @bind-Value="TimesheetEntryInsertDto.UserId" />
+        </div>
+        <div>
+            <label>Project ID</label>
+            <InputNumber @bind-Value="TimesheetEntryInsertDto.ProjectId" />
+        </div>
+        <div>
+            <label>Date</label>
+            <InputDate @bind-Value="TimesheetEntryInsertDto.Date" />
+        </div>
+        <div>
+            <label>Hours</label>
+            <InputNumber @bind-Value="TimesheetEntryInsertDto.Hours" />
+        </div>
+        <div>
+            <label>Description</label>
+            <InputText @bind-Value="TimesheetEntryInsertDto.Description" />
+        </div>
+
+        <!-- Use a button with type="button" and an @onclick handler to avoid full browser POST -->
+        <button type="button" @onclick="SubmitForm">Save</button>
+        <button type="button" @onclick="() => Console.WriteLine('clicked')">Test</button>
+
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+    </EditForm>
+
+    @if (TimesheetEntryDto is not null)
+    {
+        <p>Saved entry ID: @TimesheetEntryDto.Id</p>
+    }
 </div>
+
+@code {
+    private TimesheetEntryInsertDto TimesheetEntryInsertDto = new();
+    private TimesheetEntryDto? TimesheetEntryDto;
+    private EditContext editContext = default!;
+
+    protected override void OnInitialized()
+    {
+        // Initialize the EditContext once for the form model
+        editContext = new EditContext(TimesheetEntryInsertDto);
+    }
+
+    // Make the handler async so Blazor can await it; add logging and error handling.
+    private async Task SubmitForm()
+    {
+        Logger.LogWarning("CLICK FIRED");
+        Logger?.LogDebug("SubmitForm invoked.");
+        // Validate the current model; do not perform a browser POST.
+        if (!editContext.Validate())
+        {
+            Logger?.LogDebug("Validation failed.");
+            return;
+        }
+
+        try
+        {
+            // If the service is synchronous, run it on a background thread to avoid UI blocking.
+            TimesheetEntryDto = await System.Threading.Tasks.Task.Run(() => TimesheetService.Add(TimesheetEntryInsertDto));
+
+            Logger?.LogInformation("Timesheet entry saved with ID {Id}", TimesheetEntryDto?.Id);
+        }
+        catch (System.Exception ex)
+        {
+            Logger?.LogError(ex, "Error saving timesheet entry");
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine("Rendered OK");
+    }
+}

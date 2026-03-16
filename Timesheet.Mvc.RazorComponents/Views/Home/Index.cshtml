@@ -1,6 +1,28 @@
 ﻿@using Timesheet.Mvc.RazorComponents.Components
 
-<h1>Timesheet CRUD Index Page</h1>
+<div>Timesheet CRUD Index Page (.cshtml)</div>
 
 <component type="typeof(TimesheetCrud)"
            render-mode="ServerPrerendered" />
+
+<div>
+    <h1>Abandoned</h1>
+
+    Razor Components in .NET 8 are designed for Blazor-first apps, not MVC<br />
+    The hybrid story is “supported”, but in reality:
+    <ul>
+        <li>the pipeline order is fragile
+        <li>hydration silently fails
+        <li>errors hide behind _framework/blazor.server.js
+        <li>namespaces matter
+        <li>routing order matters
+        <li> antiforgery matters
+        <li>the hub must be mapped in the right place
+        <li>the root component must exist
+        <li>the layout must not interfere
+        <li>MVC tag helpers can break hydration
+    </ul>
+
+    I've spent a day on it. Lets just go straignt to Razor.<br/>
+    God help anyone who ever needs to do it this way!
+</div>
