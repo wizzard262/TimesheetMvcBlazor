@@ -54,6 +54,6 @@ steps:
   inputs:
     appType: 'webApp'
     azureSubscription: 'TimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
-    WebAppName: 'TimesheetMvcRazorComponents'
+    WebAppName: 'cmapTimesheet'
     package: '$(build.artifactStagingDirectory)/Timesheet.Mvc.Classic.zip'
     #package: '$(build.artifactStagingDirectory)/WebApp.zip'  <-- this would be the correct output for VSBuild
