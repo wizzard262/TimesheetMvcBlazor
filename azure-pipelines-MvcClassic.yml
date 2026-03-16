@@ -20,17 +20,18 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+  
 # build just the Mvc.RazorComponents project
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     projects: 'Timesheet.Mvc.Classic/Timesheet.Mvc.Classic.csproj'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 
 # zip the published output
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/publish.zip'
