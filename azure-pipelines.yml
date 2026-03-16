@@ -59,7 +59,7 @@ steps:
 # zip ONLY the published output
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish/Timesheet.Mvc.Classic'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/site.zip'
