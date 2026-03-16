@@ -29,18 +29,18 @@ steps:
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 
 # zip the published output
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/publish.zip'
-    replaceExistingArchive: true
+#- task: ArchiveFiles@2
+#  inputs:
+#    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+#    includeRootFolder: false
+#    archiveType: 'zip'
+#    archiveFile: '$(Build.ArtifactStagingDirectory)/publish.zip'
+#    replaceExistingArchive: true
 
 # publish the artifact
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/publish.zip'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Timesheet.Mvc.Classic.zip'
     ArtifactName: 'drop'
 
 # run the unit tests
@@ -55,5 +55,5 @@ steps:
     appType: 'webApp'
     azureSubscription: 'TimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
     WebAppName: 'TimesheetMvcRazorComponents'
-    package: '$(build.artifactStagingDirectory)/publish.zip'
+    package: '$(build.artifactStagingDirectory)/Timesheet.Mvc.Classic.zip'
     #package: '$(build.artifactStagingDirectory)/WebApp.zip'  <-- this would be the correct output for VSBuild
