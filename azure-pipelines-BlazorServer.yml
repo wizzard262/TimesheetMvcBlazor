@@ -45,5 +45,5 @@ steps:
   inputs:
     appType: 'webApp'
     azureSubscription: 'TimesheetServiceConnection' # N.B. is actually a service connection name not a subscription
-    WebAppName: 'TimesheetBlazorComponents'
+    WebAppName: 'TimesheetBlazorServer'
     package: '$(build.artifactStagingDirectory)/Timesheet.Blazor.Server.zip'
