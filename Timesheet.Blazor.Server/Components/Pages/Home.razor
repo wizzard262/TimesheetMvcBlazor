@@ -1,7 +1,186 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using Timesheet.Core.Models.Domain
+@using Timesheet.Core.Models.Dto
+@using Timesheet.Core.Repositories
+@using Timesheet.Core.Services
+@using Timesheet.Core.Validation
 
-<h1>Hello, world!</h1>
+@inject ITimesheetService TimesheetService
 
-Welcome to your new app.
+<PageTitle>Timesheet</PageTitle>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>UserId</th>
+            <th>ProjectId</th>
+            <th>Date</th>
+            <th>Hours</th>
+            <th>Description</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+
+    <!-- EXISTING ROWS -->
+    @if (_timesheetEntries != null)
+    {
+        foreach (var entry in _timesheetEntries)
+        {
+            var ctx = _rowEditContexts[entry.Id];
+
+            <tbody>
+                <tr>
+                    <td colspan="7" style="padding:0">
+                        <EditForm EditContext="@ctx" OnValidSubmit="() => HandleUpdateRow(entry, ctx)">
+                            <table style="width:100%">
+                                <tr>
+                                    <td>#@entry.Id</td>
+                                    <td>
+                                        <InputNumber class="form-control" @bind-Value="entry.UserId" @min="1" />
+                                    </td>
+                                    <td>
+                                        <InputNumber class="form-control" @bind-Value="entry.ProjectId" @min="1" />
+                                    </td>
+                                    <td>
+                                        <InputDate class="form-control" @bind-Value="entry.Date" />
+                                    </td>
+                                    <td>
+                                        <InputNumber class="form-control" @bind-Value="entry.Hours" />
+                                    </td>
+                                    <td>
+                                        <InputText class="form-control" @bind-Value="entry.Description" />
+                                    </td>
+                                    <td>
+                                        <!--Note: Delete can be a button but to get "Update" changes this button must be a submit -->
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                        <button type="button" class="btn btn-danger" @onclick="() => HandleDeleteRow(entry)">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <DataAnnotationsValidator />
+                                        <ValidationSummary />
+                                    </td>
+                                </tr>
+                            </table>
+                        </EditForm>
+                    </td>
+                </tr>
+            </tbody>
+        }
+    }
+
+    <!-- ADD NEW ENTRY -->
+    <tbody class="table-secondary">
+        <tr>
+            <td colspan="7" style="padding:0">
+                <EditForm EditContext="@_addEditContext" OnValidSubmit="HandleAddRow">
+                    <table style="width:100%">
+                        <tr>
+                            <td>
+                                &nbsp;&nbsp;&nbsp;
+                            </td>
+                            <td>
+                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.UserId" @min="1" />
+                            </td>
+                            <td>
+                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.ProjectId" @min="1" />
+                            </td>
+                            <td>
+                                <InputDate class="form-control" @bind-Value="_timesheetEntryInsertDto.Date" />
+                            </td>
+                            <td>
+                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.Hours" />
+                            </td>
+                            <td>
+                                <InputText class="form-control" @bind-Value="_timesheetEntryInsertDto.Description" />
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                            </td>
+                        </tr>
+                    </table>
+                </EditForm>
+            </td>
+        </tr>
+    </tbody>
+</table>
+@if (_message.Show)
+{
+    <div class="alert alert-success">
+        @_message.Text
+    </div>
+}
+
+@code
+{
+    private TimesheetEntryInsertDto _timesheetEntryInsertDto = new();
+    private List<TimesheetEntryDto> _timesheetEntries = new();
+    private Dictionary<int, EditContext> _rowEditContexts = new();
+    private EditContext? _addEditContext;
+    private (bool Show, string Text) _message = (false, string.Empty);
+
+    protected override void OnInitialized()
+    {
+        _addEditContext = new EditContext(_timesheetEntryInsertDto);
+        _timesheetEntries = TimesheetService.GetAll().ToList();
+
+        if (_timesheetEntries != null)
+        {
+            foreach (var entry in _timesheetEntries)
+            {
+                _rowEditContexts[entry.Id] = new EditContext(entry);
+            }
+        }
+    }
+
+    private void HandleAddRow()
+    {
+        // Add the new entry and get the created DTO with its assigned ID
+        var timesheetEntryDto = TimesheetService.Add(_timesheetEntryInsertDto);
+        _timesheetEntries.Add(timesheetEntryDto);
+
+
+        ShowMessage($"Timesheet entry ADDED with ID #{timesheetEntryDto?.Id}");
+
+        // Add the new entry's EditContext to the dictionary so it can be edited immediately
+        _rowEditContexts.Add(timesheetEntryDto!.Id, new EditContext(timesheetEntryDto));
+
+        // Reset the form model and validation state
+        _timesheetEntryInsertDto = new TimesheetEntryInsertDto();
+        _addEditContext = new EditContext(_timesheetEntryInsertDto);
+    }
+
+    private void HandleUpdateRow(TimesheetEntryDto entry, EditContext context)
+    {
+        // if we do not validate, the entry is not updated
+        if (!context.Validate())
+        {
+            return;
+        }
+
+        TimesheetService.Update(entry);
+        ShowMessage($"Timesheet entry UPDATE with ID #{entry?.Id}");
+    }
+
+    private void HandleDeleteRow(TimesheetEntryDto entry)
+    {
+        TimesheetService.Delete(entry.Id);
+        _timesheetEntries.Remove(entry);
+
+        ShowMessage($"Timesheet entry DELETED with ID #{entry?.Id}");
+    }
+
+    private void ShowMessage(string message)
+    {
+        _message = (true, message);
+    }
+}
