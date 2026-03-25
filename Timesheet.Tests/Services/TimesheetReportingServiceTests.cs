@@ -8,7 +8,7 @@ namespace Timesheet.Tests.Services
 {
     public class TimesheetReportingServiceTests
     {
-        // TODO: Copilot generated tests - review for accuracy
+        // ste:todo: Copilot generated tests - review for accuracy
         [Fact]
         public void GetReportModel_NoParams_ReturnsUserIdsAndIsoWeeks()
         {

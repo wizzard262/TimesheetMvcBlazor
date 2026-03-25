@@ -44,7 +44,7 @@
                             {
                                 foreach (var isoWeek in Model.IsoWeeks)
                                 {
-                                    // TODO: View should not do this concatenation? move to view model composition
+                                    // ste:todo: View should not do this concatenation? move to view model composition
                                     var id = $"{isoWeek.IsoWeekId}-{isoWeek.IsoYearId}";
                                     if (id == Model.SelectedIsoWeekIdIsoYearId)
                                     {
@@ -64,7 +64,7 @@
                         </button>
                     </td>
                 </tr>
-            <tbody>
+            </tbody>
         </table>
     </form>
 </div>

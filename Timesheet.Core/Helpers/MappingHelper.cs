@@ -3,7 +3,7 @@ using Timesheet.Core.Models.Dto;
 
 namespace Timesheet.Core.Helpers
 {
-    // TODO: Use automapping library instead
+    // ste:todo: Use automapping library instead
     public static class MappingHelper
     {
         public static IEnumerable<TimesheetEntryDto> MapTimesheetEntriesToTimesheetEntryDtos(IEnumerable<TimesheetEntry> timesheetEntries) 

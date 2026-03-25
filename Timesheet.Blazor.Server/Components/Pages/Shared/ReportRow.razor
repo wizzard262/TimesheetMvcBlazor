@@ -1,0 +1,28 @@
+@using Timesheet.Core.Models.Dto
+
+<tr>
+    <td>
+        #@(TimesheetEntryDto?.Id ?? 0)
+    </td>
+    <td>
+        @TimesheetEntryDto?.UserId
+    </td>
+    <td>
+        @TimesheetEntryDto?.ProjectId
+    </td>
+    <td>
+        @(TimesheetEntryDto?.Date.ToString("dd/MM/yyyy") ?? "")
+    </td>
+    <td>
+        @TimesheetEntryDto?.Hours
+    </td>
+    <td>
+        @TimesheetEntryDto?.Description
+    </td>
+</tr>
+
+@code {
+    [Parameter] public TimesheetEntryDto? TimesheetEntryDto { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Message { get; set; }
+}

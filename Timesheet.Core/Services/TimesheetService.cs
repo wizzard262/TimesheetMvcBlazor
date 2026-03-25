@@ -53,7 +53,8 @@ public class TimesheetService(ITimesheetRepository timesheetRepository, ITimeshe
 
         var validationResult = _timesheetEntryValidator.ValidateUnique(timesheetEntryInsertDto);
         if (validationResult != ValidationResult.Success)
-        {
+        {   
+            // ste:todo: this works for MVC but not for Blazor, return ServiceResult.cs
             throw new ValidationException(validationResult!.ErrorMessage);
         }
 
@@ -84,6 +85,7 @@ public class TimesheetService(ITimesheetRepository timesheetRepository, ITimeshe
         var validationResult = _timesheetEntryValidator.ValidateUnique(timesheetEntryDto, timesheetEntryDto.Id);
         if (validationResult != ValidationResult.Success)
         {
+            // ste:todo: this works for MVC but not for Blazor, return ServiceResult.cs
             throw new ValidationException(validationResult!.ErrorMessage);
         }
 
