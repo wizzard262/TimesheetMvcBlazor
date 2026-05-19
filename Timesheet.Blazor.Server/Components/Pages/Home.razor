@@ -1,14 +1,25 @@
 ﻿@page "/"
 
-@using Timesheet.Core.Models.Domain
 @using Timesheet.Core.Models.Dto
-@using Timesheet.Core.Repositories
 @using Timesheet.Core.Services
-@using Timesheet.Core.Validation
 
 @inject ITimesheetService TimesheetService
 
 <PageTitle>Timesheet</PageTitle>
+
+<ul>
+    <li>Git repository at: <a href="https://dev.azure.com/jones-steve/_git/Timesheet">https://dev.azure.com/jones-steve/_git/Timesheet</a></li>
+    <li>Build & Deployed from Azure Devops Pipeline (with Unit tests) </li>
+    <li>
+        1 of 3 front-ends using the same Application Layer (helpers, models, repository, services, validation)
+        <ul>
+            <li>Blazor hosted on Azure at: <a href="https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/">https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/</a></li>
+            <li>MVC Classic  hosted on Azure at: <a href="https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/">https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/</a></li>
+            <li>Hybrid MVC/Blazor architecture hosted on Azure at: <a href="https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/">https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/</a></li>
+        </ul>
+    </li>
+    <li>Repository uses in‑memory storage for demo purposes (no data perpetuation beyond session).</li>
+</ul>
 
 <table class="table table-bordered">
     <thead class="table-dark">
