@@ -1,0 +1,24 @@
+﻿@page "/abstraction"
+
+<PageTitle>Abstraction</PageTitle>
+
+
+<h1>Branch by Abstraction</h1>
+<ul>
+    <li>The original project was MVC Classic with the domain-layer embedded in the same project as the MVC UI.</li>
+    <li>Unit tests for the domain-layer exist in a separate test project.</li>
+    <li>
+        <b>Introduce abstraction.</b> The domain layer was extracted into its own project behind a clear domain abstraction.
+        <br />Unit tests ensured the domain functionality remained unchanged.
+    </li>
+    <li><b>Redirect existing UI to the abstraction.</b> The MVC Classic UI was refactored to depend on the new domain abstraction.</li>
+    <li>
+        <b>Reuse the abstraction for additional UIs:</b>
+        <ul>
+            <li>A new Razor Hybrid (MVC/Razor Pages and Blazor components)  UI was added, also consuming the shared domain layer.</li>
+            <li>A new Blazor Server UI was added, also consuming the shared domain layer.</li>
+        </ul>
+    </li>
+</ul>
+
+<img src="/images/abstraction-of-projects.png" />

@@ -29,6 +29,13 @@
                                 Timesheet Reports
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Abstraction" ? "active" : "")"
+                               asp-area="" asp-controller="Abstraction"
+                               asp-action="Index">
+                                Branch by Abstraction
+                            </a>
+                        </li>
                         <li class="nav-item"><b>MVC Classic (No .Net8 Razor Components)</b></li>
                     </ul>
                 </div>

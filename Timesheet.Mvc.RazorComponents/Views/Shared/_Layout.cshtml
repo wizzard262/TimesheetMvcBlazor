@@ -30,6 +30,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Abstraction" ? "active" : "")"
+                               asp-area="" asp-controller="Abstraction"
+                               asp-action="Index">
+                                Brach By Abstraction
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <b>MVC with Razor Components (Hybrid MVC/Blazor architecture)</b>
                         </li>
                     </ul>
