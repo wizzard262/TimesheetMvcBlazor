@@ -39,6 +39,22 @@
                         <li class="nav-item"><b>MVC Classic (No .Net8 Razor Components)</b></li>
                     </ul>
                 </div>
+                <!-- Microsoft Entra ID -->
+                <div class="d-flex align-items-center gap-3">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="fw-semibold">Hello @User.Identity.Name</span>
+                        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut" class="btn btn-outline-secondary btn-sm">Logout</a>
+                    }
+                    else
+                    {
+                        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn" class="btn btn-primary btn-sm">Login</a>
+                    }
+
+                    <a asp-controller="Home" asp-action="AdminOnlyPage" class="link-secondary text-decoration-none">Admin Only Page</a>
+                    <a asp-controller="Home" asp-action="UserOnlyPage" class="link-secondary text-decoration-none">User Only Page</a>
+                    <a asp-controller="Home" asp-action="MyRoles" class="link-secondary text-decoration-none">My Roles</a>
+                </div>
             </div>
         </nav>
     </header>
