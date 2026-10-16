@@ -1,13 +1,35 @@
 ﻿@using Timesheet.Mvc.Classic.Controllers
 @model HomeController.MyRolesViewModel
+@{
+    ViewData["Title"] = "My roles";
+}
 
-<h2>Authentication Status</h2>
-<p>Authenticated: <b>@Model.IsAuthenticated</b></p>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Microsoft Entra ID</p>
+        <h1>My roles</h1>
+        <p class="lead">Everything Entra sent about you when you signed in.</p>
+    </div>
+</section>
 
-<h2>Claims</h2>
-<ul>
-    @foreach (var claim in Model.Claims)
-    {
-        <li><strong>@claim.Type</strong>: @claim.Value</li>
-    }
-</ul>
+<main class="wrap grid">
+    <section class="card card-wide">
+        <h2>Signed in: @(Model.IsAuthenticated ? "yes" : "no")</h2>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Claim</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in Model.Claims)
+                    {
+                        <tr>
+                            <td data-label="Claim"><code>@claim.Type</code></td>
+                            <td data-label="Value">@claim.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>

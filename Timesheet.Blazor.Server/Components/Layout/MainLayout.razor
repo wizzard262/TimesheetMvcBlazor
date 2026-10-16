@@ -1,15 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<NavMenu />
+
+@Body
+
+<footer class="footer">
+    <div class="wrap">
+        Timesheet by Steve Jones &middot;
+        <a href="https://dev.azure.com/jones-steve/_git/Timesheet">Code on Azure DevOps</a> &middot;
+        <a href="https://www.harriercarrier.com/portfolio.html">Portfolio</a>
     </div>
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+</footer>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

@@ -1,0 +1,34 @@
+@* The three front ends that share Timesheet.Core. Current is the one being shown: "Classic", "Hybrid" or "Blazor". *@
+
+<section class="card" aria-labelledby="variants-title">
+    <h2 id="variants-title">Three front ends, one core</h2>
+    <p>The same application layer (models, repository, services, validation) in <code>Timesheet.Core</code>, used by three different UIs:</p>
+    <ul class="variants">
+        <li class="@(Current == "Classic" ? "current" : "")">
+            <a href="https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/"><b>MVC Classic</b></a>@if (Current == "Classic") {<span class="tag">you are here</span>}
+            <div class="small muted">Controllers and Razor views, full page posts. Also has Microsoft Entra ID sign-in.</div>
+        </li>
+        <li class="@(Current == "Blazor" ? "current" : "")">
+            <a href="https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/"><b>Blazor Server</b></a>@if (Current == "Blazor") {<span class="tag">you are here</span>}
+            <div class="small muted">Interactive components over a SignalR connection, no page reloads.</div>
+        </li>
+        <li class="@(Current == "Hybrid" ? "current" : "")">
+            <a href="https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/"><b>MVC + Razor Components</b></a>@if (Current == "Hybrid") {<span class="tag">you are here</span>}
+            <div class="small muted">MVC pages hosting Blazor components (abandoned experiment).</div>
+        </li>
+    </ul>
+</section>
+
+<section class="card" aria-labelledby="build-title">
+    <h2 id="build-title">How it's built</h2>
+    <ul>
+        <li>C# .NET, on Azure App Service.</li>
+        <li>Each front end has its own Azure DevOps pipeline that runs the unit tests, then deploys.</li>
+        <li>Data is held in memory, so changes last only while the app is running.</li>
+        <li><a href="https://dev.azure.com/jones-steve/_git/Timesheet">Git repository on Azure DevOps</a></li>
+    </ul>
+</section>
+
+@code {
+    [Parameter] public string Current { get; set; } = "";
+}

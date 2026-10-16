@@ -4,53 +4,41 @@
 
 @if (Model.IsEditable)
 {
-    <form asp-action="RowAction" method="post">
-        <tr>
-            <td>
-                <input asp-for="TimesheetEntryDto.Id" type="hidden" />
-                #@(Model.TimesheetEntryDto?.Id ?? 0)
-            </td>
-            <td>
-                <input asp-for="TimesheetEntryDto.UserId" class="form-control" min="1" />
-            <td>
-                <input asp-for="TimesheetEntryDto.ProjectId" class="form-control" min="1" />
-            </td>
-            <td>
-                <input asp-for="TimesheetEntryDto.Date" type="date" class="form-control" />
-            </td>
-            <td>
-                <input asp-for="TimesheetEntryDto.Hours" type="number" class="form-control" step="0.1" />
-            </td>
-            <td>
-                <input asp-for="TimesheetEntryDto.Description" class="form-control" />
-            </td>
-            <td>
-                <button type="submit" name="action" value="update" class="btn btn-success btn-sm">Update</button>
-                <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">Delete</button>
-            </td>
-        </tr>
+    // One form per row (a <form> can't wrap a table row, so rows are grid rows)
+    <form asp-action="RowAction" method="post" class="entry-row">
+        <span class="entry-id">
+            <input asp-for="TimesheetEntryDto.Id" type="hidden" />
+            #@(Model.TimesheetEntryDto?.Id ?? 0)
+        </span>
+        <label class="field"><span class="field-label">User</span>
+            <input asp-for="TimesheetEntryDto.UserId" min="1" />
+        </label>
+        <label class="field"><span class="field-label">Project</span>
+            <input asp-for="TimesheetEntryDto.ProjectId" min="1" />
+        </label>
+        <label class="field"><span class="field-label">Date</span>
+            <input asp-for="TimesheetEntryDto.Date" type="date" />
+        </label>
+        <label class="field"><span class="field-label">Hours</span>
+            <input asp-for="TimesheetEntryDto.Hours" type="number" step="0.25" />
+        </label>
+        <label class="field field-wide"><span class="field-label">Description</span>
+            <input asp-for="TimesheetEntryDto.Description" />
+        </label>
+        <div class="row-actions">
+            <button type="submit" name="action" value="update" class="button button-ghost">Update</button>
+            <button type="submit" name="action" value="delete" class="button button-danger">Delete</button>
+        </div>
     </form>
 }
 else
 {
     <tr>
-        <td>
-            #@(Model.TimesheetEntryDto?.Id ?? 0)
-        </td>
-        <td>
-            @Model.TimesheetEntryDto?.UserId
-        </td>
-        <td>
-            @Model.TimesheetEntryDto?.ProjectId
-        </td>
-        <td>
-            @(Model.TimesheetEntryDto?.Date.ToString("dd/MM/yyyy") ?? "")
-        </td>
-        <td>
-            @Model.TimesheetEntryDto?.Hours
-        </td>
-        <td>
-            @Model.TimesheetEntryDto?.Description
-        </td>
+        <td data-label="ID">#@(Model.TimesheetEntryDto?.Id ?? 0)</td>
+        <td data-label="User">@Model.TimesheetEntryDto?.UserId</td>
+        <td data-label="Project">@Model.TimesheetEntryDto?.ProjectId</td>
+        <td data-label="Date">@(Model.TimesheetEntryDto?.Date.ToString("ddd d MMM yyyy") ?? "")</td>
+        <td data-label="Hours" class="num">@Model.TimesheetEntryDto?.Hours</td>
+        <td data-label="Description">@Model.TimesheetEntryDto?.Description</td>
     </tr>
 }

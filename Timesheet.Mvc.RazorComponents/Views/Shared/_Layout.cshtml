@@ -1,63 +1,38 @@
 ﻿<!DOCTYPE html>
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Timesheet.Mvc.RazorComponents</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta name="color-scheme" content="light dark" />
+    <title>@ViewData["Title"] - Timesheet (MVC + Razor Components)</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Timesheet.Mvc.RazorComponents.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Home" ? "active" : "")"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="Index">
-                                Timesheet Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Reporting" ? "active" : "")"
-                               asp-area="" asp-controller="Reporting"
-                               asp-action="Index">
-                                Timesheet Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Abstraction" ? "active" : "")"
-                               asp-area="" asp-controller="Abstraction"
-                               asp-action="Index">
-                                Brach By Abstraction
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <b>MVC with Razor Components (Hybrid MVC/Blazor architecture)</b>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <header class="topbar">
+        <div class="wrap">
+            <a class="brand" asp-controller="Home" asp-action="Index">Timesheet</a>
+            <span class="variant">MVC + Razor Components</span>
+            <nav class="nav" aria-label="Pages">
+                <a class="@(controller == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Timesheet</a>
+                <a class="@(controller == "Reporting" ? "active" : "")" asp-controller="Reporting" asp-action="Index">Reports</a>
+                <a class="@(controller == "Abstraction" ? "active" : "")" asp-controller="Abstraction" asp-action="Index">Branch by abstraction</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Timesheet.Mvc.RazorComponents
+    @RenderBody()
+
+    <footer class="footer">
+        <div class="wrap">
+            Timesheet by Steve Jones &middot;
+            <a href="https://dev.azure.com/jones-steve/_git/Timesheet">Code on Azure DevOps</a> &middot;
+            <a href="https://www.harriercarrier.com/portfolio.html">Portfolio</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <script src="_framework/blazor.server.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

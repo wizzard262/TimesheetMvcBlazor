@@ -1,24 +1,12 @@
 @using Timesheet.Core.Models.Dto
 
 <tr>
-    <td>
-        #@(TimesheetEntryDto?.Id ?? 0)
-    </td>
-    <td>
-        @TimesheetEntryDto?.UserId
-    </td>
-    <td>
-        @TimesheetEntryDto?.ProjectId
-    </td>
-    <td>
-        @(TimesheetEntryDto?.Date.ToString("dd/MM/yyyy") ?? "")
-    </td>
-    <td>
-        @TimesheetEntryDto?.Hours
-    </td>
-    <td>
-        @TimesheetEntryDto?.Description
-    </td>
+    <td data-label="ID">#@(TimesheetEntryDto?.Id ?? 0)</td>
+    <td data-label="User">@TimesheetEntryDto?.UserId</td>
+    <td data-label="Project">@TimesheetEntryDto?.ProjectId</td>
+    <td data-label="Date">@(TimesheetEntryDto?.Date.ToString("ddd d MMM yyyy") ?? "")</td>
+    <td data-label="Hours" class="num">@TimesheetEntryDto?.Hours</td>
+    <td data-label="Description">@TimesheetEntryDto?.Description</td>
 </tr>
 
 @code {

@@ -1,6 +1,16 @@
 ﻿@using Timesheet.Mvc.RazorComponents.Components
+@{
+    ViewData["Title"] = "Reports";
+}
 
-<div>Timesheet Reporting Index Page (.cshtml)</div>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Timesheet &middot; MVC + Razor Components</p>
+        <h1>Reports</h1>
+        <p class="lead">An MVC page (.cshtml) hosting a Razor component (.razor).</p>
+    </div>
+</section>
 
-<component type="typeof(TimesheetReport)"
-           render-mode="ServerPrerendered" />
+<main class="wrap grid">
+    <component type="typeof(TimesheetReport)" render-mode="ServerPrerendered" />
+</main>

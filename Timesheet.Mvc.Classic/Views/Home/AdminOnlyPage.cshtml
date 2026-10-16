@@ -1,4 +1,17 @@
-﻿<h2>Admin Only Page</h2>
-<p>
-    Has the Claim: <i>http://schemas.microsoft.com/ws/2008/06/identity/claims/role: IsUser</i>
-</p>
+﻿@{
+    ViewData["Title"] = "Admin only page";
+}
+
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Microsoft Entra ID</p>
+        <h1>Admin only page</h1>
+        <p class="lead">You can see this because your account has the admin role.</p>
+    </div>
+</section>
+
+<main class="wrap grid">
+    <section class="card card-wide">
+        <p>Has the claim: <code>http://schemas.microsoft.com/ws/2008/06/identity/claims/role: IsAdmin</code></p>
+    </section>
+</main>

@@ -4,35 +4,30 @@
 @inject ITimesheetService TimesheetService
 @inject Microsoft.Extensions.Logging.ILogger<TimesheetCrud> Logger
 
-<div style="border: solid 1px red">
-    Timesheet CRUD Razor Component (.razor)
+<section class="card card-wide" aria-labelledby="crud-title">
+    <h2 id="crud-title">Add a timesheet entry</h2>
+    <p class="muted small">This box is a Blazor component (.razor) inside an MVC page. If it can't connect to the server, Save does nothing: that is the fragility described below.</p>
 
-    <EditForm EditContext="editContext">
-        <div>
-            <label>User ID</label>
+    <EditForm EditContext="editContext" class="form-grid">
+        <label>User ID
             <InputNumber @bind-Value="TimesheetEntryInsertDto.UserId" />
-        </div>
-        <div>
-            <label>Project ID</label>
+        </label>
+        <label>Project ID
             <InputNumber @bind-Value="TimesheetEntryInsertDto.ProjectId" />
-        </div>
-        <div>
-            <label>Date</label>
+        </label>
+        <label>Date
             <InputDate @bind-Value="TimesheetEntryInsertDto.Date" />
-        </div>
-        <div>
-            <label>Hours</label>
+        </label>
+        <label>Hours
             <InputNumber @bind-Value="TimesheetEntryInsertDto.Hours" />
-        </div>
-        <div>
-            <label>Description</label>
+        </label>
+        <label>Description
             <InputText @bind-Value="TimesheetEntryInsertDto.Description" />
+        </label>
+        <div>
+            <!-- Use a button with type="button" and an @onclick handler to avoid full browser POST -->
+            <button type="button" class="button" @onclick="SubmitForm">Save</button>
         </div>
-
-        <!-- Use a button with type="button" and an @onclick handler to avoid full browser POST -->
-        <button type="button" @onclick="SubmitForm">Save</button>
-        <button type="button" @onclick="() => Console.WriteLine('clicked')">Test</button>
-
 
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -40,9 +35,9 @@
 
     @if (TimesheetEntryDto is not null)
     {
-        <p>Saved entry ID: @TimesheetEntryDto.Id</p>
+        <div class="notice alert-success" role="status">Saved entry ID: #@TimesheetEntryDto.Id</div>
     }
-</div>
+</section>
 
 @code {
     private TimesheetEntryInsertDto TimesheetEntryInsertDto = new();
@@ -58,7 +53,6 @@
     // Make the handler async so Blazor can await it; add logging and error handling.
     private async Task SubmitForm()
     {
-        Logger.LogWarning("CLICK FIRED");
         Logger?.LogDebug("SubmitForm invoked.");
         // Validate the current model; do not perform a browser POST.
         if (!editContext.Validate())
@@ -82,10 +76,5 @@
         {
             StateHasChanged();
         }
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Console.WriteLine("Rendered OK");
     }
 }

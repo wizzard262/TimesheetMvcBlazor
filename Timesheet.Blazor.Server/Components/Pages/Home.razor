@@ -5,131 +5,97 @@
 
 @inject ITimesheetService TimesheetService
 
-<PageTitle>Timesheet</PageTitle>
+<PageTitle>Timesheet (Blazor Server)</PageTitle>
 
-<ul>
-    <li>Git repository at: <a href="https://dev.azure.com/jones-steve/_git/Timesheet">https://dev.azure.com/jones-steve/_git/Timesheet</a></li>
-    <li>Build & Deployed from Azure Devops Pipeline (with Unit tests) </li>
-    <li>
-        1 of 3 front-ends using the same Application Layer (helpers, models, repository, services, validation)
-        <ul>
-            <li>Blazor hosted on Azure at: <a href="https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/">https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/</a></li>
-            <li>MVC Classic  hosted on Azure at: <a href="https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/">https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/</a></li>
-            <li>Hybrid MVC/Blazor architecture hosted on Azure at: <a href="https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/">https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/</a></li>
-        </ul>
-    </li>
-    <li>Repository uses in‑memory storage for demo purposes (no data perpetuation beyond session).</li>
-</ul>
-
-<table class="table table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Id</th>
-            <th>UserId</th>
-            <th>ProjectId</th>
-            <th>Date</th>
-            <th>Hours</th>
-            <th>Description</th>
-            <th>&nbsp;</th>
-        </tr>
-    </thead>
-
-    <!-- EXISTING ROWS -->
-    @if (_timesheetEntries != null)
-    {
-        foreach (var entry in _timesheetEntries)
-        {
-            var ctx = _rowEditContexts[entry.Id];
-
-            <tbody>
-                <tr>
-                    <td colspan="7" style="padding:0">
-                        <EditForm EditContext="@ctx" OnValidSubmit="() => HandleUpdateRow(entry, ctx)">
-                            <table style="width:100%">
-                                <tr>
-                                    <td>#@entry.Id</td>
-                                    <td>
-                                        <InputNumber class="form-control" @bind-Value="entry.UserId" @min="1" />
-                                    </td>
-                                    <td>
-                                        <InputNumber class="form-control" @bind-Value="entry.ProjectId" @min="1" />
-                                    </td>
-                                    <td>
-                                        <InputDate class="form-control" @bind-Value="entry.Date" />
-                                    </td>
-                                    <td>
-                                        <InputNumber class="form-control" @bind-Value="entry.Hours" />
-                                    </td>
-                                    <td>
-                                        <InputText class="form-control" @bind-Value="entry.Description" />
-                                    </td>
-                                    <td>
-                                        <!--Note: Delete can be a button but to get "Update" changes this button must be a submit -->
-                                        <button type="submit" class="btn btn-success">Update</button>
-                                        <button type="button" class="btn btn-danger" @onclick="() => HandleDeleteRow(entry)">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <DataAnnotationsValidator />
-                                        <ValidationSummary />
-                                    </td>
-                                </tr>
-                            </table>
-                        </EditForm>
-                    </td>
-                </tr>
-            </tbody>
-        }
-    }
-
-    <!-- ADD NEW ENTRY -->
-    <tbody class="table-secondary">
-        <tr>
-            <td colspan="7" style="padding:0">
-                <EditForm EditContext="@_addEditContext" OnValidSubmit="HandleAddRow">
-                    <table style="width:100%">
-                        <tr>
-                            <td>
-                                &nbsp;&nbsp;&nbsp;
-                            </td>
-                            <td>
-                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.UserId" @min="1" />
-                            </td>
-                            <td>
-                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.ProjectId" @min="1" />
-                            </td>
-                            <td>
-                                <InputDate class="form-control" @bind-Value="_timesheetEntryInsertDto.Date" />
-                            </td>
-                            <td>
-                                <InputNumber class="form-control" @bind-Value="_timesheetEntryInsertDto.Hours" />
-                            </td>
-                            <td>
-                                <InputText class="form-control" @bind-Value="_timesheetEntryInsertDto.Description" />
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary">Add</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-                                <DataAnnotationsValidator />
-                                <ValidationSummary />
-                            </td>
-                        </tr>
-                    </table>
-                </EditForm>
-            </td>
-        </tr>
-    </tbody>
-</table>
-@if (_message.Show)
-{
-    <div class="alert alert-success">
-        @_message.Text
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">C# .NET &middot; Blazor Server &middot; SignalR &middot; Azure</p>
+        <h1>Timesheet</h1>
+        <p class="lead">Add, edit and delete timesheet entries without page reloads, then report hours per project for a user and week.
+            One of three front ends built on the same application layer.</p>
     </div>
-}
+</section>
+
+<main class="wrap grid">
+    <section class="card card-wide" aria-labelledby="entries-title">
+        <h2 id="entries-title">Timesheet entries</h2>
+        <p class="muted small">Change a row and press Update, or add a new one at the bottom. Hours must be between 0.25 and 12; dates can't be in the future.</p>
+
+        @if (_message.Show)
+        {
+            <div class="notice alert-success" role="status">@_message.Text</div>
+        }
+
+        <div class="entries">
+            <div class="entry-head" aria-hidden="true">
+                <span>ID</span><span>User</span><span>Project</span><span>Date</span><span>Hours</span><span>Description</span><span></span>
+            </div>
+
+            <!-- EXISTING ROWS: one form per row -->
+            @foreach (var entry in _timesheetEntries)
+            {
+                var ctx = _rowEditContexts[entry.Id];
+
+                <EditForm EditContext="@ctx" OnValidSubmit="() => HandleUpdateRow(entry, ctx)" class="entry-row" @key="entry.Id">
+                    <span class="entry-id">#@entry.Id</span>
+                    <label class="field"><span class="field-label">User</span>
+                        <InputNumber @bind-Value="entry.UserId" min="1" />
+                    </label>
+                    <label class="field"><span class="field-label">Project</span>
+                        <InputNumber @bind-Value="entry.ProjectId" min="1" />
+                    </label>
+                    <label class="field"><span class="field-label">Date</span>
+                        <InputDate @bind-Value="entry.Date" />
+                    </label>
+                    <label class="field"><span class="field-label">Hours</span>
+                        <InputNumber @bind-Value="entry.Hours" step="0.25" />
+                    </label>
+                    <label class="field field-wide"><span class="field-label">Description</span>
+                        <InputText @bind-Value="entry.Description" />
+                    </label>
+                    <div class="row-actions">
+                        <!--Note: Delete can be a button but to get "Update" changes this button must be a submit -->
+                        <button type="submit" class="button button-ghost">Update</button>
+                        <button type="button" class="button button-danger" @onclick="() => HandleDeleteRow(entry)">Delete</button>
+                    </div>
+                    <div class="row-errors">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                    </div>
+                </EditForm>
+            }
+
+            <!-- ADD NEW ENTRY -->
+            <EditForm EditContext="@_addEditContext" OnValidSubmit="HandleAddRow" class="entry-row add">
+                <span class="entry-id">New</span>
+                <label class="field"><span class="field-label">User</span>
+                    <InputNumber @bind-Value="_timesheetEntryInsertDto.UserId" min="1" />
+                </label>
+                <label class="field"><span class="field-label">Project</span>
+                    <InputNumber @bind-Value="_timesheetEntryInsertDto.ProjectId" min="1" />
+                </label>
+                <label class="field"><span class="field-label">Date</span>
+                    <InputDate @bind-Value="_timesheetEntryInsertDto.Date" />
+                </label>
+                <label class="field"><span class="field-label">Hours</span>
+                    <InputNumber @bind-Value="_timesheetEntryInsertDto.Hours" step="0.25" />
+                </label>
+                <label class="field field-wide"><span class="field-label">Description</span>
+                    <InputText @bind-Value="_timesheetEntryInsertDto.Description" />
+                </label>
+                <div class="row-actions">
+                    <button type="submit" class="button">Add</button>
+                </div>
+                <div class="row-errors">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                </div>
+            </EditForm>
+        </div>
+    </section>
+
+    <Variants Current="Blazor" />
+</main>
 
 @code
 {
@@ -144,12 +110,9 @@
         _addEditContext = new EditContext(_timesheetEntryInsertDto);
         _timesheetEntries = TimesheetService.GetAll().ToList();
 
-        if (_timesheetEntries != null)
+        foreach (var entry in _timesheetEntries)
         {
-            foreach (var entry in _timesheetEntries)
-            {
-                _rowEditContexts[entry.Id] = new EditContext(entry);
-            }
+            _rowEditContexts[entry.Id] = new EditContext(entry);
         }
     }
 
@@ -159,8 +122,7 @@
         var timesheetEntryDto = TimesheetService.Add(_timesheetEntryInsertDto);
         _timesheetEntries.Add(timesheetEntryDto);
 
-
-        ShowMessage($"Timesheet entry ADDED with ID #{timesheetEntryDto?.Id}");
+        ShowMessage($"Timesheet entry added with ID #{timesheetEntryDto?.Id}");
 
         // Add the new entry's EditContext to the dictionary so it can be edited immediately
         _rowEditContexts.Add(timesheetEntryDto!.Id, new EditContext(timesheetEntryDto));
@@ -179,15 +141,16 @@
         }
 
         TimesheetService.Update(entry);
-        ShowMessage($"Timesheet entry UPDATE with ID #{entry?.Id}");
+        ShowMessage($"Timesheet entry #{entry?.Id} updated successfully.");
     }
 
     private void HandleDeleteRow(TimesheetEntryDto entry)
     {
         TimesheetService.Delete(entry.Id);
         _timesheetEntries.Remove(entry);
+        _rowEditContexts.Remove(entry.Id);
 
-        ShowMessage($"Timesheet entry DELETED with ID #{entry?.Id}");
+        ShowMessage($"Timesheet entry #{entry?.Id} deleted.");
     }
 
     private void ShowMessage(string message)

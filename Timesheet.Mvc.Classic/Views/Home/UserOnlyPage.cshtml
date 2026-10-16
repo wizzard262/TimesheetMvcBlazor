@@ -1,6 +1,18 @@
-﻿<h2>User Only Page</h2>
-<p>
-    Has the Claim: <i>http://schemas.microsoft.com/ws/2008/06/identity/claims/role: IsUser</i>
-    <br />
-    (Admins can access this as they also have this Claim)
-</p>
+﻿@{
+    ViewData["Title"] = "User only page";
+}
+
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Microsoft Entra ID</p>
+        <h1>User only page</h1>
+        <p class="lead">You can see this because your account has the user role.</p>
+    </div>
+</section>
+
+<main class="wrap grid">
+    <section class="card card-wide">
+        <p>Has the claim: <code>http://schemas.microsoft.com/ws/2008/06/identity/claims/role: IsUser</code></p>
+        <p class="muted small">Admins can open this page too, because they also have the user role.</p>
+    </section>
+</main>

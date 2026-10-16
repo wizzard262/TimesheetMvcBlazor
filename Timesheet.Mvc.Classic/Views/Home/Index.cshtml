@@ -3,7 +3,7 @@
 @model HomepageViewModel
 
 @{
-    ViewData["Title"] = "Timesheet Home Page";
+    ViewData["Title"] = "Timesheet";
 
     // this is not ideal using a pair of different variables that work together
     // in a production project better to have a strongly-typed object
@@ -11,107 +11,85 @@
     var type = TempData["MessageType"] as string ?? "alert-info";
 }
 
-<ul>
-    <li>Git repository at: <a href="https://dev.azure.com/jones-steve/_git/Timesheet">https://dev.azure.com/jones-steve/_git/Timesheet</a></li>
-    <li>Build & Deployed from Azure Devops Pipeline (with Unit tests) </li>
-    <li>
-        1 of 3 front-ends using the same Application Layer (helpers, models, repository, services, validation)
-        <ul>
-            <li>Blazor hosted on Azure at: <a href="https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/">https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/</a></li>
-            <li>MVC Classic  hosted on Azure at: <a href="https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/">https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/</a></li>
-            <li>Hybrid MVC/Blazor architecture hosted on Azure at: <a href="https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/">https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/</a></li>
-        </ul>
-    </li>
-    <li>Repository uses in‑memory storage for demo purposes (no data perpetuation beyond session).</li>
-</ul>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">C# .NET &middot; ASP.NET Core MVC &middot; Microsoft Entra ID &middot; Azure</p>
+        <h1>Timesheet</h1>
+        <p class="lead">Add, edit and delete timesheet entries, then report hours per project for a user and week.
+            One of three front ends built on the same application layer.</p>
+    </div>
+</section>
 
-<table class="table table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Id</th>
-            <th>UserId</th>
-            <th>ProjectId</th>
-            <th>Date</th>
-            <th>Hours</th>
-            <th>Description</th>
-            <th>&nbsp;</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.TimesheetEntries != null)
-        {
-            foreach (var timesheetEntryDto in Model.TimesheetEntries)
-            {
-                <partial name="_TimesheetRow" model="new TimesheetRowViewModel { TimesheetEntryDto = timesheetEntryDto, IsEditable = true }" />
-            }
-            // ste:todo: maybe this ADD TimesheetRow (below) can go into _TimesheetRow.cshtml with PRINT and UPDATE TimesheetRow?
-        }
-        <tr class="table-secondary">
-            <form asp-action="Add" method="post">
-                <td>
-                    &nbsp;
-                </td>
-                <td>
-                    <input asp-for="NewTimesheetEntry.UserId" class="form-control" min="1" />
-                </td>
-                <td>
-                    <input asp-for="NewTimesheetEntry.ProjectId" class="form-control" min="1" />
-                </td>
-                <td>
-                    <input asp-for="NewTimesheetEntry.Date" class="form-control" />
-                    <span asp-validation-for="NewTimesheetEntry.Date" class="text-danger"></span>
-                </td>
-                <td>
-                    <input asp-for="NewTimesheetEntry.Hours" class="form-control" type="number" step="0.1" />
-                    <span asp-validation-for="NewTimesheetEntry.Hours" class="text-danger"></span>
-                </td>
-                <td>
-                    <input asp-for="NewTimesheetEntry.Description" class="form-control" />
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </td>
-            </form>
-        </tr>
+<main class="wrap grid">
+    <section class="card card-wide" aria-labelledby="entries-title">
+        <h2 id="entries-title">Timesheet entries</h2>
+        <p class="muted small">Change a row and press Update, or add a new one at the bottom. Hours must be between 0.25 and 12; dates can't be in the future.</p>
 
-        <!-- notification banner -->
         @if (!string.IsNullOrEmpty(message))
         {
-            <tr>
-                <td colspan="7" class="@type fw-bold">
-                    <span>@message</span>
-                </td>
-            </tr>
+            <div class="notice @type" role="status">@message</div>
         }
-    </tbody>
-</table>
 
+        <div class="entries">
+            <div class="entry-head" aria-hidden="true">
+                <span>ID</span><span>User</span><span>Project</span><span>Date</span><span>Hours</span><span>Description</span><span></span>
+            </div>
 
-<hr />
+            @if (Model.TimesheetEntries != null)
+            {
+                foreach (var timesheetEntryDto in Model.TimesheetEntries)
+                {
+                    <partial name="_TimesheetRow" model="new TimesheetRowViewModel { TimesheetEntryDto = timesheetEntryDto, IsEditable = true }" />
+                }
+            }
 
-<h2>MICROSOFT ENTRA TEST - Authenticate and Authorise</h2>
+            <form asp-action="Add" method="post" class="entry-row add">
+                <span class="entry-id">New</span>
+                <label class="field"><span class="field-label">User</span>
+                    <input asp-for="NewTimesheetEntry.UserId" min="1" />
+                    <span asp-validation-for="NewTimesheetEntry.UserId" class="text-danger"></span>
+                </label>
+                <label class="field"><span class="field-label">Project</span>
+                    <input asp-for="NewTimesheetEntry.ProjectId" min="1" />
+                    <span asp-validation-for="NewTimesheetEntry.ProjectId" class="text-danger"></span>
+                </label>
+                <label class="field"><span class="field-label">Date</span>
+                    <input asp-for="NewTimesheetEntry.Date" />
+                    <span asp-validation-for="NewTimesheetEntry.Date" class="text-danger"></span>
+                </label>
+                <label class="field"><span class="field-label">Hours</span>
+                    <input asp-for="NewTimesheetEntry.Hours" type="number" step="0.25" />
+                    <span asp-validation-for="NewTimesheetEntry.Hours" class="text-danger"></span>
+                </label>
+                <label class="field field-wide"><span class="field-label">Description</span>
+                    <input asp-for="NewTimesheetEntry.Description" />
+                </label>
+                <div class="row-actions">
+                    <button type="submit" class="button">Add</button>
+                </div>
+            </form>
+        </div>
+    </section>
 
-Using the links above:
-<ul>
-    <li>Login/ Logout</li>
-    <li>Admin Only Page</li>
-    <li>User Only Page (Admin is also User)</li>
-    <li>My Roles (list all the auth and claims data from Entra)</li>
-</ul>
-<ul>
-    <li>
-        Basic user: user@jonesstevelive.onmicrosoft.com (PW: 4Candles)<br />
-        Can access /UserPage<br />
-        Cannot access /AdminPage
-    </li>
-    <li>
-        Admin user: admin@jonesstevelive.onmicrosoft.com (PW: Fork_Handles)<br />
-        Can access /AdminPage<br />
-        Can access /UserPage
-    </li>
+    <partial name="_Variants" model="@("Classic")" />
 
-</ul>
-
+    <section class="card card-wide" aria-labelledby="entra-title">
+        <h2 id="entra-title">Microsoft Entra ID: sign in and roles</h2>
+        <p>Use the links in the bar at the top: sign in and out, try the admin-only and user-only pages, and list every claim Entra sends in <b>My roles</b>.</p>
+        <div class="creds">
+            <div>
+                <b>Basic user</b><br />
+                user@jonesstevelive.onmicrosoft.com (password: 4Candles)<br />
+                <span class="small muted">Can open the user page, not the admin page.</span>
+            </div>
+            <div>
+                <b>Admin user</b><br />
+                admin@jonesstevelive.onmicrosoft.com (password: Fork_Handles)<br />
+                <span class="small muted">Can open both pages (admins also have the user role).</span>
+            </div>
+        </div>
+    </section>
+</main>
 
 @section Scripts {
     @{

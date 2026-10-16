@@ -1,41 +1,33 @@
 ﻿@using Timesheet.Mvc.RazorComponents.Components
+@{
+    ViewData["Title"] = "Timesheet";
+}
 
-<div>Timesheet CRUD Index Page (.cshtml)</div>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">C# .NET &middot; MVC hosting Blazor components &middot; Azure</p>
+        <h1>Timesheet: hybrid MVC and Razor Components</h1>
+        <p class="lead">An MVC page (.cshtml) hosting an interactive Blazor component (.razor) that adds timesheet entries.
+            One of three front ends on the same application layer; this one was an experiment that was abandoned.</p>
+    </div>
+</section>
 
-<ul>
-    <li>Git repository at: <a href="https://dev.azure.com/jones-steve/_git/Timesheet">https://dev.azure.com/jones-steve/_git/Timesheet</a></li>
-    <li>Build & Deployed from Azure Devops Pipeline (with Unit tests) </li>
-    <li>
-        1 of 3 front-ends using the same Application Layer (helpers, models, repository, services, validation)
+<main class="wrap grid">
+    <component type="typeof(TimesheetCrud)" render-mode="ServerPrerendered" />
+
+    <section class="card" aria-labelledby="abandoned-title">
+        <h2 id="abandoned-title">Why it was abandoned</h2>
+        <p>Razor Components in .NET 8 are designed for Blazor-first apps, not MVC. The hybrid story is "supported", but in practice:</p>
         <ul>
-            <li>Blazor hosted on Azure at: <a href="https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/">https://timesheetblazorserver-f3b8ejfeeycydhcu.uksouth-01.azurewebsites.net/</a></li>
-            <li>MVC Classic  hosted on Azure at: <a href="https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/">https://cmaptimesheet-gff8embhgmbbh2ec.uksouth-01.azurewebsites.net/</a></li>
-            <li>Hybrid MVC/Blazor architecture hosted on Azure at: <a href="https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/">https://timesheetmvcrazorcomponents-dxd2hbdkezfxgmh9.uksouth-01.azurewebsites.net/</a></li>
+            <li>the pipeline order is fragile;</li>
+            <li>hydration fails silently;</li>
+            <li>errors hide behind <code>_framework/blazor.server.js</code>;</li>
+            <li>namespaces, routing order and antiforgery all matter;</li>
+            <li>the hub must be mapped in the right place, and the root component must exist;</li>
+            <li>the layout must not interfere, and MVC tag helpers can break hydration.</li>
         </ul>
-    </li>
-    <li>Repository uses in‑memory storage for demo purposes (no data perpetuation beyond session).</li>
-</ul>
+        <p>Too brittle, so the next step went straight to Blazor (see the Blazor Server version).</p>
+    </section>
 
-<component type="typeof(TimesheetCrud)"
-           render-mode="ServerPrerendered" />
-
-<div>
-    <h1>Abandoned</h1>
-
-    Razor Components in .NET 8 are designed for Blazor-first apps, not MVC<br />
-    The hybrid story is “supported”, but in reality:
-    <ul>
-        <li>the pipeline order is fragile
-        <li>hydration silently fails
-        <li>errors hide behind _framework/blazor.server.js
-        <li>namespaces matter
-        <li>routing order matters
-        <li> antiforgery matters
-        <li>the hub must be mapped in the right place
-        <li>the root component must exist
-        <li>the layout must not interfere
-        <li>MVC tag helpers can break hydration
-    </ul>
-
-    I've spent too long on it. Too brittle. Lets just go straight to Razor.
-</div>
+    <partial name="_Variants" model="@("Hybrid")" />
+</main>

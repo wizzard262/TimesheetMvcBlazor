@@ -6,128 +6,113 @@
 
 @inject ITimesheetReportingService TimesheetReportingService
 
-<PageTitle>Report</PageTitle>
+<PageTitle>Reports (Blazor Server)</PageTitle>
 
-<div class="container float-start" style="max-width: 600px;">
-    <EditForm Model="_timesheetReportDto" OnValidSubmit="() => GenerateReport()">
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>User</th>
-                    <th>IsoWeek</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <InputSelect @bind-Value="_timesheetReportDto.SelectedUserId" required>
-                            <option value="">select user</option>
-                            @if (_timesheetReportDto.UserIds != null)
-                            {
-                                foreach (var id in _timesheetReportDto.UserIds)
-                                {
-                                    if (id == _timesheetReportDto.SelectedUserId)
-                                    {
-                                        <option value="@id" selected>@id</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@id">@id</option>
-                                    }
-                                }
-                            }
-                        </InputSelect>
-                    </td>
-                    <td>
-                        <InputSelect @bind-Value="_timesheetReportDto.SelectedIsoWeekIdIsoYearId" required>
-                            <option value="">select week</option>
-                            @if (_timesheetReportDto.IsoWeeks != null)
-                            {
-                                foreach (var isoWeek in _timesheetReportDto.IsoWeeks)
-                                {
-                                    // ste:todo: View should not do this concatenation? move to view model composition
-                                    var id = $"{isoWeek.IsoWeekId}-{isoWeek.IsoYearId}";
-                                    if (id == _timesheetReportDto.SelectedIsoWeekIdIsoYearId)
-                                    {
-                                        <option value="@id" selected>@isoWeek.WeekRange</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@id">@isoWeek.WeekRange</option>
-                                    }
-                                }
-                            }
-                        </InputSelect>
-                    </td>
-                    <td class="text-center">
-                        <button type="submit" class="btn btn-primary">
-                            Generate Report
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </EditForm>
-</div>
-<div class="clearfix"></div>
-
-@if (_showReport)
-{
-    <div>
-        <p class="fw-bold">Entries for UserId #@_timesheetReportDto.SelectedUserId on week: @_timesheetReportDto.SelectedIsoWeekRange</p>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>UserId</th>
-                    <th>ProjectId</th>
-                    <th>Date</th>
-                    <th>Hours</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (_timesheetReportDto.TimesheetEntries != null)
-                {
-                    foreach (var timesheetEntryDto in _timesheetReportDto.TimesheetEntries)
-                    {
-                        <ReportRow @key="timesheetEntryDto.Id"
-                                   TimesheetEntryDto="timesheetEntryDto" />
-                    }
-                }
-            </tbody>
-        </table>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Timesheet &middot; Blazor Server</p>
+        <h1>Reports</h1>
+        <p class="lead">Pick a user and an ISO week to see their entries and the hours they spent on each project.</p>
     </div>
+</section>
 
-    <div>
-        <p class="fw-bold">Hours per project for UserId #@_timesheetReportDto.SelectedUserId on week: @_timesheetReportDto.SelectedIsoWeekRange</p>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Project Id</th>
-                    <th>Hours Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (_timesheetReportDto.ProjectHours != null)
-                {
-                    foreach (var projectHours in _timesheetReportDto.ProjectHours)
+<main class="wrap grid">
+    <section class="card card-wide" aria-labelledby="report-title">
+        <h2 id="report-title">Choose a user and week</h2>
+        <EditForm Model="_timesheetReportDto" OnValidSubmit="() => GenerateReport()" class="form-grid">
+            <label>User
+                <InputSelect @bind-Value="_timesheetReportDto.SelectedUserId" required>
+                    <option value="">Select user</option>
+                    @if (_timesheetReportDto.UserIds != null)
                     {
+                        foreach (var id in _timesheetReportDto.UserIds)
+                        {
+                            <option value="@id">User @id</option>
+                        }
+                    }
+                </InputSelect>
+            </label>
+            <label>ISO week
+                <InputSelect @bind-Value="_timesheetReportDto.SelectedIsoWeekIdIsoYearId" required>
+                    <option value="">Select week</option>
+                    @if (_timesheetReportDto.IsoWeeks != null)
+                    {
+                        foreach (var isoWeek in _timesheetReportDto.IsoWeeks)
+                        {
+                            // ste:todo: View should not do this concatenation? move to view model composition
+                            var id = $"{isoWeek.IsoWeekId}-{isoWeek.IsoYearId}";
+                            <option value="@id">@isoWeek.WeekRange</option>
+                        }
+                    }
+                </InputSelect>
+            </label>
+            <div>
+                <button type="submit" class="button">Generate report</button>
+            </div>
+        </EditForm>
+    </section>
+
+    @if (_showReport)
+    {
+        <section class="card card-wide" aria-labelledby="entries-title">
+            <h2 id="entries-title">Entries for user #@_timesheetReportDto.SelectedUserId</h2>
+            <p class="muted small">Week: @_timesheetReportDto.SelectedIsoWeekRange</p>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>@projectHours.Key</td>
-                            <td>@projectHours.Value</td>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Project</th>
+                            <th>Date</th>
+                            <th class="num">Hours</th>
+                            <th>Description</th>
                         </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                    </thead>
+                    <tbody>
+                        @if (_timesheetReportDto.TimesheetEntries != null)
+                        {
+                            foreach (var timesheetEntryDto in _timesheetReportDto.TimesheetEntries)
+                            {
+                                <ReportRow @key="timesheetEntryDto.Id" TimesheetEntryDto="timesheetEntryDto" />
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card card-wide" aria-labelledby="hours-title">
+            <h2 id="hours-title">Hours per project</h2>
+            <p class="muted small">User #@_timesheetReportDto.SelectedUserId, week: @_timesheetReportDto.SelectedIsoWeekRange</p>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th class="num">Total hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_timesheetReportDto.ProjectHours != null)
+                        {
+                            foreach (var projectHours in _timesheetReportDto.ProjectHours)
+                            {
+                                <tr>
+                                    <td data-label="Project">Project @projectHours.Key</td>
+                                    <td data-label="Total hours" class="num">@projectHours.Value</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+</main>
 
 @code {
     private bool _showReport = false;
-    private List<TimesheetEntryDto> _timesheetEntries = new();
     private TimesheetReportDto _timesheetReportDto = new();
 
     protected override void OnInitialized()

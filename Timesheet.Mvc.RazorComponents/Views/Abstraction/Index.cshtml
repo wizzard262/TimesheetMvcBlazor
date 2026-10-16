@@ -1,20 +1,37 @@
-﻿
-<h1>Branch by Abstraction</h1>
-<ul>
-    <li>The original project was MVC Classic with the domain-layer embedded in the same project as the MVC UI.</li>
-    <li>Unit tests for the domain-layer exist in a separate test project.</li>
-    <li>
-        <b>Introduce abstraction.</b> The domain layer was extracted into its own project behind a clear domain abstraction.
-        <br />Unit tests ensured the domain functionality remained unchanged.
-    </li>
-    <li><b>Redirect existing UI to the abstraction.</b> The MVC Classic UI was refactored to depend on the new domain abstraction.</li>
-    <li>
-        <b>Reuse the abstraction for additional UIs:</b>
-        <ul>
-            <li>A new Razor Hybrid (MVC/Razor Pages and Blazor components)  UI was added, also consuming the shared domain layer.</li>
-            <li>A new Blazor Server UI was added, also consuming the shared domain layer.</li>
-        </ul>
-    </li>
-</ul>
+﻿﻿@{
+    ViewData["Title"] = "Branch by abstraction";
+}
 
-<img src="~/images/abstraction-of-projects.png" />
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Timesheet &middot; how it was refactored</p>
+        <h1>Branch by abstraction</h1>
+        <p class="lead">How one MVC app became a shared core with three front ends, without breaking it along the way.</p>
+    </div>
+</section>
+
+<main class="wrap grid">
+    <section class="card" aria-labelledby="steps-title">
+        <h2 id="steps-title">The steps</h2>
+        <ol>
+            <li>The original project was MVC Classic, with the domain layer in the same project as the MVC UI. Unit tests for the domain layer were in a separate test project.</li>
+            <li><b>Introduce the abstraction.</b> The domain layer moved into its own project behind a clear interface. The unit tests showed it still behaved the same.</li>
+            <li><b>Point the existing UI at it.</b> The MVC Classic UI was changed to depend on the new domain project.</li>
+            <li><b>Reuse it for more UIs:</b>
+                <ul>
+                    <li>a hybrid UI (MVC/Razor Pages hosting Blazor components);</li>
+                    <li>a Blazor Server UI.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section class="card" aria-labelledby="projects-title">
+        <h2 id="projects-title">Projects before and after</h2>
+        <div class="figure">
+            <img src="~/images/abstraction-of-projects.png" alt="Solution Explorer before: Timesheet (domain layer and UI) and Timesheet.Tests. After: Timesheet.Blazor.Server (UI), Timesheet.Core (domain layer), Timesheet.Mvc.Classic (UI), Timesheet.Mvc.RazorComponents (UI) and Timesheet.Tests" />
+        </div>
+    </section>
+
+    <partial name="_Variants" model="@("Hybrid")" />
+</main>

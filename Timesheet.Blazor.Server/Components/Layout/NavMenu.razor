@@ -1,28 +1,11 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Timesheet.Blazor.Server</a>
+﻿<header class="topbar">
+    <div class="wrap">
+        <a class="brand" href="">Timesheet</a>
+        <span class="variant">Blazor Server</span>
+        <nav class="nav" aria-label="Pages">
+            <NavLink href="" Match="NavLinkMatch.All">Timesheet</NavLink>
+            <NavLink href="report">Reports</NavLink>
+            <NavLink href="abstraction">Branch by abstraction</NavLink>
+        </nav>
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Timesheet
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="report">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Report
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="abstraction">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Branch By Abstraction
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
+</header>

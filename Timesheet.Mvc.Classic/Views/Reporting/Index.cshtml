@@ -3,124 +3,112 @@
 @model ReportViewModel
 
 @{
-    ViewData["Title"] = "Timesheet Report Page";
+    ViewData["Title"] = "Reports";
+    var showReport = Context.Request.Path == "/Reporting/SubmitReport";
 }
 
-<div class="container float-start" style="max-width: 600px;">
-    <form asp-action="SubmitReport" method="post">
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>User</th>
-                    <th>IsoWeek</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select class="form-select" name="SelectedUserId" required>
-                            <option value="">select user</option>
-                            @if (Model.UserIds != null)
-                            {
-                                foreach (var id in Model.UserIds)
-                                {
-                                    if (id == Model.SelectedUserId)
-                                    {
-                                        <option value="@id" selected>@id</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@id">@id</option>
-                                    }
-                                }
-                            }
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-select" name="SelectedIsoWeekIdIsoYearId" required>
-                            <option value="">select week</option>
-                            @if (Model.IsoWeeks != null)
-                            {
-                                foreach (var isoWeek in Model.IsoWeeks)
-                                {
-                                    // ste:todo: View should not do this concatenation? move to view model composition
-                                    var id = $"{isoWeek.IsoWeekId}-{isoWeek.IsoYearId}";
-                                    if (id == Model.SelectedIsoWeekIdIsoYearId)
-                                    {
-                                        <option value="@id" selected>@isoWeek.WeekRange</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@id">@isoWeek.WeekRange</option>
-                                    }
-                                }
-                            }
-                        </select>
-                    </td>
-                    <td class="text-center">
-                        <button type="submit" class="btn btn-primary">
-                            Generate Report
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
-<div class="clearfix"></div>
-
-@if (@Context.Request.Path == "/Reporting/SubmitReport")
-{
-    <div>
-        <p class="fw-bold">Entries for UserId #@Model.SelectedUserId on week: @Model.SelectedIsoWeekRange</p>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>UserId</th>
-                    <th>ProjectId</th>
-                    <th>Date</th>
-                    <th>Hours</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.TimesheetEntries != null)
-                {
-                    foreach (var timesheetEntryDto in Model.TimesheetEntries)
-                    {
-                        <partial name="_TimesheetRow" model="new TimesheetRowViewModel { TimesheetEntryDto = timesheetEntryDto, IsEditable = false }" />
-                    }
-                }
-            </tbody>
-        </table>
+<section class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Timesheet &middot; MVC Classic</p>
+        <h1>Reports</h1>
+        <p class="lead">Pick a user and an ISO week to see their entries and the hours they spent on each project.</p>
     </div>
+</section>
 
-    <div>
-        <p class="fw-bold">Hours per project for UserId #@Model.SelectedUserId on week: @Model.SelectedIsoWeekRange</p>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Project Id</th>
-                    <th>Hours Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.ProjectHours != null)
-                {
-                    foreach (var projectHours in Model.ProjectHours)
+<main class="wrap grid">
+    <section class="card card-wide" aria-labelledby="report-title">
+        <h2 id="report-title">Choose a user and week</h2>
+        <form asp-action="SubmitReport" method="post" class="form-grid">
+            <label>User
+                <select name="SelectedUserId" required>
+                    <option value="">Select user</option>
+                    @if (Model.UserIds != null)
                     {
+                        foreach (var id in Model.UserIds)
+                        {
+                            <option value="@id" selected="@(id == Model.SelectedUserId)">User @id</option>
+                        }
+                    }
+                </select>
+            </label>
+            <label>ISO week
+                <select name="SelectedIsoWeekIdIsoYearId" required>
+                    <option value="">Select week</option>
+                    @if (Model.IsoWeeks != null)
+                    {
+                        foreach (var isoWeek in Model.IsoWeeks)
+                        {
+                            // ste:todo: View should not do this concatenation? move to view model composition
+                            var id = $"{isoWeek.IsoWeekId}-{isoWeek.IsoYearId}";
+                            <option value="@id" selected="@(id == Model.SelectedIsoWeekIdIsoYearId)">@isoWeek.WeekRange</option>
+                        }
+                    }
+                </select>
+            </label>
+            <div>
+                <button type="submit" class="button">Generate report</button>
+            </div>
+        </form>
+    </section>
+
+    @if (showReport)
+    {
+        <section class="card card-wide" aria-labelledby="entries-title">
+            <h2 id="entries-title">Entries for user #@Model.SelectedUserId</h2>
+            <p class="muted small">Week: @Model.SelectedIsoWeekRange</p>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>@projectHours.Key</td>
-                            <td>@projectHours.Value</td>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Project</th>
+                            <th>Date</th>
+                            <th class="num">Hours</th>
+                            <th>Description</th>
                         </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                    </thead>
+                    <tbody>
+                        @if (Model.TimesheetEntries != null)
+                        {
+                            foreach (var timesheetEntryDto in Model.TimesheetEntries)
+                            {
+                                <partial name="_TimesheetRow" model="new TimesheetRowViewModel { TimesheetEntryDto = timesheetEntryDto, IsEditable = false }" />
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card card-wide" aria-labelledby="hours-title">
+            <h2 id="hours-title">Hours per project</h2>
+            <p class="muted small">User #@Model.SelectedUserId, week: @Model.SelectedIsoWeekRange</p>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th class="num">Total hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ProjectHours != null)
+                        {
+                            foreach (var projectHours in Model.ProjectHours)
+                            {
+                                <tr>
+                                    <td data-label="Project">Project @projectHours.Key</td>
+                                    <td data-label="Total hours" class="num">@projectHours.Value</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+</main>
 
 @section Scripts {
     @{

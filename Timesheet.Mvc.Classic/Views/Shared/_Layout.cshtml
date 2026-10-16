@@ -1,77 +1,58 @@
 ﻿<!DOCTYPE html>
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Timesheet</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta name="color-scheme" content="light dark" />
+    <title>@ViewData["Title"] - Timesheet (MVC Classic)</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Timesheet.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Home" ? "active" : "")"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="Index">
-                                Timesheet Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Reporting" ? "active" : "")"
-                               asp-area="" asp-controller="Reporting"
-                               asp-action="Index">
-                                Timesheet Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Abstraction" ? "active" : "")"
-                               asp-area="" asp-controller="Abstraction"
-                               asp-action="Index">
-                                Branch by Abstraction
-                            </a>
-                        </li>
-                        <li class="nav-item"><b>MVC Classic (No .Net8 Razor Components)</b></li>
-                    </ul>
-                </div>
-                <!-- Microsoft Entra ID -->
-                <div class="d-flex align-items-center gap-3">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <span class="fw-semibold">Hello @User.Identity.Name</span>
-                        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut" class="btn btn-outline-secondary btn-sm">Logout</a>
-                    }
-                    else
-                    {
-                        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn" class="btn btn-primary btn-sm">Login</a>
-                    }
-
-                    <a asp-controller="Home" asp-action="AdminOnlyPage" class="link-secondary text-decoration-none">Admin Only Page</a>
-                    <a asp-controller="Home" asp-action="UserOnlyPage" class="link-secondary text-decoration-none">User Only Page</a>
-                    <a asp-controller="Home" asp-action="MyRoles" class="link-secondary text-decoration-none">My Roles</a>
-                </div>
-            </div>
-        </nav>
+    <header class="topbar">
+        <div class="wrap">
+            <a class="brand" asp-controller="Home" asp-action="Index">Timesheet</a>
+            <span class="variant">MVC Classic</span>
+            <nav class="nav" aria-label="Pages">
+                <a class="@(controller == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Timesheet</a>
+                <a class="@(controller == "Reporting" ? "active" : "")" asp-controller="Reporting" asp-action="Index">Reports</a>
+                <a class="@(controller == "Abstraction" ? "active" : "")" asp-controller="Abstraction" asp-action="Index">Branch by abstraction</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+    <!-- Microsoft Entra ID sign-in -->
+    <div class="authbar">
+        <div class="wrap">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span class="who">Signed in as <b>@User.Identity.Name</b></span>
+                <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
+            }
+            else
+            {
+                <span class="who">Microsoft Entra ID test</span>
+                <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
+            }
+            <a asp-controller="Home" asp-action="AdminOnlyPage">Admin only page</a>
+            <a asp-controller="Home" asp-action="UserOnlyPage">User only page</a>
+            <a asp-controller="Home" asp-action="MyRoles">My roles</a>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Timesheet
+    @RenderBody()
+
+    <footer class="footer">
+        <div class="wrap">
+            Timesheet by Steve Jones &middot;
+            <a href="https://dev.azure.com/jones-steve/_git/Timesheet">Code on Azure DevOps</a> &middot;
+            <a href="https://www.harriercarrier.com/portfolio.html">Portfolio</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
