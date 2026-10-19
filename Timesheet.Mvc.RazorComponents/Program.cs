@@ -29,7 +29,8 @@ webApplication.UseStaticFiles();
 webApplication.UseRouting();
 webApplication.UseAntiforgery();        // ⭐ REQUIRED for Razor Components
 webApplication.MapBlazorHub();          // ⭐ REQUIRED for Razor Components
-webApplication.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+// No MapRazorComponents<App>(): it maps _framework/blazor.server.js a second time (AmbiguousMatchException, so Save never worked).
+// The components live inside MVC views (<component render-mode="ServerPrerendered">), so the hub alone is enough.
 
 webApplication.MapControllerRoute(
     name: "default",
