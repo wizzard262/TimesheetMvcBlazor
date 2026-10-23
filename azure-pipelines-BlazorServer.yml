@@ -39,10 +39,11 @@ steps:
     ArtifactName: 'drop'
 
 # run the unit tests
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'test'
+    projects: 'Timesheet.Tests/Timesheet.Tests.csproj'
+    arguments: '--configuration Release'
 
 # deploy to azure 
 - task: azureRmWebAppDeployment@4
